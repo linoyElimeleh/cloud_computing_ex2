@@ -19,7 +19,7 @@ Our architecture contains 3 services:
 3. Worker Service - This is the component responsible for the job itself. When we scale up the number of workers we can process more parallel jobs.
 
  
-![](arch.png)
+![](architecture.png)
 
 ---
 
@@ -32,6 +32,7 @@ When load increases the number of workers should increase as well while remianin
 
 
 ---
+## Failure Modes
 
 ### Single Point of Failure
 Our orchestrator is a single point of failure. If for some reason this instance fails we won't be able to process new jobs and our API will fail as well and return 500.
