@@ -1,7 +1,11 @@
 API_CONFIG="api/config.py"
+
 ORCH_CONFIG="orchestrator/config.py"
+
 WORKER_CONFIG="worker/config.py"
 
 END_POINT_APP="api/app.py"
+
 LB_APP="orchestrator/app.py"
+
 WORKER_APP="worker/app.py"
