@@ -1,9 +1,7 @@
-# Const path
-END_POINT_CONST="api/const.py"
-LB_CONST="orchestrator/const.py"
-WORKER_CONST="worker/const.py"
+API_CONFIG="api/config.py"
+ORCH_CONFIG="orchestrator/config.py"
+WORKER_CONFIG="worker/config.py"
 
-# App path
 END_POINT_APP="api/app.py"
 LB_APP="orchestrator/app.py"
 WORKER_APP="worker/app.py"

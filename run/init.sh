@@ -171,9 +171,9 @@ function deploy_orchestrator() {
       git clone "$GITHUB_URL.git"
       cd $PROJ_NAME
 
-      echo WORKER_AMI_ID = "'$WORKER_AMI_ID'" >> "$LB_CONST"
-      echo orchestrator_public_ip = "'$PUBLIC_IP'" >> "$LB_CONST"
-      echo USER_REGION = "'$USER_REGION'" >> "$LB_CONST"
+      echo WORKER_AMI_ID = "'$WORKER_AMI_ID'" >> "$ORCH_CONFIG"
+      echo orchestrator_public_ip = "'$PUBLIC_IP'" >> "$ORCH_CONFIG"
+      echo USER_REGION = "'$USER_REGION'" >> "$ORCH_CONFIG"
 
       printf "Install requirements\n"
       pip3 install -r "orchestrator/requirements.txt"
@@ -229,7 +229,7 @@ function deploy_api() {
       echo "Install requirements"
       pip3 install -r "api/requirements.txt"
 
-      echo orchestrator_public_ip = "'$orchestrator_public_ip'" >> "$END_POINT_CONST"
+      echo orchestrator_public_ip = "'$orchestrator_public_ip'" >> "$API_CONFIG"
 
       export FLASK_APP="end_point/app.py"
       nohup flask run --host=0.0.0.0 &>/dev/null & exit
