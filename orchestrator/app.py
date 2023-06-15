@@ -14,17 +14,28 @@ result_list = []
 next_call = time.time()
 
 
+@app.route('/pullCompleted', methods=['POST'])
+def pullCompleted():
+    if request.method == "POST":
+        top = int(request.args.get('top'))
+        slice_index = min(top, len(result_list))
+        return Response(mimetype='application/json',
+                        response=json.dumps({"result": result_list[:slice_index]}),
+                        status=200)
+
+
+@app.route('/get_result', methods=['PUT'])
+def get_result():
+    if request.method == "PUT":
+        result_list.append({"job_id": request.json["job_id"], "result": request.json["result"]})
+
+
 def read_from_txt(path):
     global const
     with open(path, "r") as f:
         lines = f.readlines()
         items = [line.replace('"', "").replace("\n", "") for line in lines if "=" in line]
         const = dict([element.split("=") for element in items])
-
-
-def check_time_first_in_line():
-    dif = datetime.utcnow() - work_queue[0]["entry_time_utc"]
-    return dif.seconds
 
 
 def deploy_worker(app_path, exit_flag=True, min_count=1, max_count=1):
@@ -42,6 +53,11 @@ def deploy_worker(app_path, exit_flag=True, min_count=1, max_count=1):
     return response
 
 
+def check_time_first_in_line():
+    dif = datetime.utcnow() - work_queue[0]["entry_time_utc"]
+    return dif.seconds
+
+
 @app.before_first_request
 def scale_up():
     read_from_txt(PATH_TO_CONST_TXT)
@@ -56,7 +72,7 @@ def scale_up():
     threading.Timer(next_call - time.time(), scale_up).start()
 
 
-@app.route('/add_job_to_queue', methods=['PUT'])
+@app.route('/addJob', methods=['PUT'])
 def add_job_to_queue():
     if request.method == "PUT":
         entry_time_utc = datetime.utcnow()
@@ -65,7 +81,6 @@ def add_job_to_queue():
             "entry_time_utc": entry_time_utc,
             "iterations": int(request.args.get("iterations")),
             "file": request.get_data()})
-
     return Response(status=200)
 
 
@@ -88,20 +103,8 @@ def get_work():
                             status=200)
 
 
-@app.route('/get_result', methods=['PUT'])
-def get_result():
-    if request.method == "PUT":
-        result_list.append({"job_id": request.json["job_id"], "result": request.json["result"]})
-
-
-@app.route('/pullCompleted', methods=['POST'])
-def pullCompleted():
-    if request.method == "POST":
-        top = int(request.args.get('top'))
-        slice_index = min(top, len(result_list))
-        return Response(mimetype='application/json', response=json.dumps({"result": result_list[:slice_index]}),
-                        status=200)
-
-
 read_from_txt(PATH_TO_CONST_TXT)
-deploy_worker(const["WORKER_APP"], exit_flag=False, min_count=1, max_count=1)
+deploy_worker(const["WORKER_APP"],
+              exit_flag=False,
+              min_count=1,
+              max_count=1)

@@ -247,24 +247,20 @@ POLICY_PATH="file://run/trust-policy.json"
 
 printf "Create worker AMI \n"
 worker_AMI_logs=$(setup_worker)
-echo "$worker_AMI_logs" >> worker_AMI_logs.txt
 WORKER_AMI_ID=$(echo "$worker_AMI_logs" | tail -1)
 printf "Using %s \n" "$WORKER_AMI_ID"
 
 printf "Deploy orchestrator\n"
 orchestrator_logs=$(deploy_orchestrator "$WORKER_AMI_ID")
-echo "$orchestrator_logs" >> orchestrator_logs.txt
 orchestrator_public_ip=$(echo "$orchestrator_logs" | tail -1)
-printf "Orchestrator @ %s \n" "$orchestrator_public_ip"
+printf "Orchestrator service: %s \n" "$orchestrator_public_ip"
 
-printf "Deploy instance1 \n"
+printf "Deploy first instance \n"
 EP_1_logs=$(deploy_api "$orchestrator_public_ip")
-echo "$EP_1_logs" >> EP_1_logs.txt
 EP_1_PUBLIC_IP=$(echo "$EP_1_logs" | tail -1)
-printf "New instance1 @ %s \n" "$EP_1_PUBLIC_IP"
+printf "first instance: %s \n" "$EP_1_PUBLIC_IP"
 
-printf "Deploy instance2"
+printf "Deploy second instance"
 EP_2_logs=$(deploy_api "$orchestrator_public_ip")
-echo "$EP_2_logs" >> EP_2_logs.txt
 EP_2_PUBLIC_IP=$(echo "$EP_2_logs" | tail -1)
-printf "New instance2 @ %s \n" "$EP_2_PUBLIC_IP"
+printf "second instance: %s \n" "$EP_2_PUBLIC_IP"
