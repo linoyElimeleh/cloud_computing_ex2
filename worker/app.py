@@ -31,7 +31,7 @@ def main():
             start_time = datetime.utcnow()
 
         else:
-            if dif.seconds > 10 and HARAKIRI:
+            if dif.seconds > TIME_OUT and HARAKIRI:
                 os.system('sudo shutdown -h now')
 
             time.sleep(1)
