@@ -1,26 +1,19 @@
 # Failure Modes and Handling
+## Overload
+When my servers are swallowed with requests (e.g., during pick hours, bot attacks, etc.), the request queue can get too long, resulting in a slower response time. The two most common ways of handling this are to turn away requests when the server is too busy or handle each request slower.
 
-## Expected Failure Modes
+## Software Failure
+In this exercise, I wasn't required to deal with edge cases, therefore, my application might fail due to bad requests, wrong input, and many more reasons. If it was a production system, I'd have to research for edge cases and cover them. Moreover, I'd test my code before deployment and if possible, have a QA engineer test it.
 
-1. Machine Failure: If a machine handling the enqueue or pullCompleted endpoints fails, the load balancer should detect the failure and redirect traffic to the other available machine.
+## Hardware Failure
+Hardware can be tricky, especially when using cloud providers, and can be defected for many reasons, such as abuse, mechanical defect, electronic defect, earthquakes, and many more. To overcome hardware failures, I need to have a backup for all the components in the cluster, including the database that is currently hosted locally and should be hosted and replicated on different machines. Moreover, I need to have a heartbeat that checks that all machines are working and, if necessary, fire a replacement.
 
-2. Network Split: In the case of a network split between the instances, the load balancer may become unavailable, resulting in a temporary disruption. Once the network split is resolved, the load balancer will resume routing requests to the available instances.
+## Network Failure
+Network failures can happen for the same reasons as mentioned in the hardware section. Those failures can result in the loss of request, e.g.:
+- Deleting a job from the queue before getting the request back.
+- Uploading/downloading only part of the data.
 
-3. Worker Node Failure: If a worker node fails, the work items in progress on that node will be lost. However, since the work items are not required to be persisted, the system can simply mark those work items as failed and remove them from the queue. The load balancer will redirect new work items to the available worker nodes.
+I'd resolve those issues by keeping the requests and results in a database outside the cluster. However, if a request fails before hitting the end-point, I don't really have a lot to do.
 
-## Handling Failure Modes
-
-1. Machine Failure:
-   - Use a load balancer with health checks to monitor the health of the machines handling the enqueue and pullCompleted endpoints.
-   - If a machine fails the health check, the load balancer should automatically remove it from the rotation and redirect traffic to the healthy machine.
-   - Set up auto-scaling policies to automatically replace failed machines and maintain the required number of instances for handling the endpoints.
-
-2. Network Split:
-   - Implement a network monitoring system that can detect network splits and send alerts to the operations team.
-   - When a network split is detected, the operations team should investigate the issue and take necessary steps to resolve it.
-   - Once the network split is resolved, the load balancer will automatically resume routing requests to the available instances.
-
-3. Worker Node Failure:
-   - Implement a monitoring system that can detect worker node failures.
-   - When a worker node fails, the monitoring system should notify the operations team.
-   - The operations team can then launch a new worker node to
+## Security
+Cyber Cyber Cyber I put in A LOT of work not to move the user's credentials to any of the machines. However, I'm sure my system has security breaches I'm not aware of. I'd definitely take a consultant in this case because it's too far away from my domain.
