@@ -27,12 +27,12 @@ def check_time_first_in_line():
     return dif.seconds
 
 
-def fire_worker(app_path, harakiri=True, min_count=1, max_count=1):
+def deploy_worker(app_path, exit_flag=True, min_count=1, max_count=1):
     user_data = f"""#!/bin/bash
                    cd {const["PROJ_NAME"]}
                    git pull
-                   echo LB_PUBLIC_IP = f{LB_PUBLIC_IP} >> {const["WORKER_CONST"]}
-                   echo HARAKIRI = {harakiri} >> {const["WORKER_CONST"]}
+                   echo LB_PUBLIC_IP = f{LB_PUBLIC_IP} >> {const["WORKER_CONFIG"]}
+                   echo EXIT_FLAG = {exit_flag} >> {const["WORKER_CONFIG"]}
                    python3 {app_path}
                 """
     client = boto3.client('ec2', region_name=USER_REGION)
@@ -49,7 +49,7 @@ def scale_up():
 
     if work_queue and check_time_first_in_line() > MAX_Q_TIME_SEC:
         resource = boto3.resource('ec2', region_name=USER_REGION)
-        response = fire_worker(const["WORKER_APP"])
+        response = deploy_worker(const["WORKER_APP"])
         instance = resource.Instance(id=response['Instances'][0]['InstanceId'])
         instance.wait_until_running()
     next_call = next_call + PERIODIC_ITERATION
@@ -104,4 +104,4 @@ def pullCompleted():
 
 
 read_from_txt(PATH_TO_CONST_TXT)
-fire_worker(const["WORKER_APP"], harakiri=False, min_count=1, max_count=1)
+deploy_worker(const["WORKER_APP"], exit_flag=False, min_count=1, max_count=1)
