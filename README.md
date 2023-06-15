@@ -24,7 +24,7 @@ Our architecture contains 3 services:
 ---
 
 ## How to run?
-Run the "run" script to deploy all instances.
+Run the "init.sh" script to deploy all instances.
 Make sure bash and AWS CLI exist on your machine.
 After instances are up, can validate using AWS console or AWS CLI, 
 You should have 4 running instances: 2 API's, 1 Orchestrator and 1 Worker.
