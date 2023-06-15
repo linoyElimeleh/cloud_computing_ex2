@@ -5,7 +5,7 @@ import threading
 import time
 import uuid
 import boto3
-from const import MAX_Q_TIME_SEC, PERIODIC_ITERATION, INSTANCE_TYPE, \
+from config import MAX_Q_TIME_SEC, PERIODIC_ITERATION, INSTANCE_TYPE, \
     PATH_TO_CONST_TXT, WORKER_AMI_ID, LB_PUBLIC_IP, USER_REGION
 
 app = Flask(__name__)

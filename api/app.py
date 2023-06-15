@@ -1,6 +1,6 @@
 from flask import Response, Flask, render_template, request, redirect
 import requests
-from const import LB_PUBLIC_IP
+from config import LB_PUBLIC_IP
 import json
 
 app = Flask(__name__)

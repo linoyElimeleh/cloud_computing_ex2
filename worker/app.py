@@ -3,7 +3,7 @@ import time
 import boto3
 from ec2_metadata import ec2_metadata
 import os
-from const import LB_PUBLIC_IP, TIME_OUT, PORT, HARAKIRI
+from config import LB_PUBLIC_IP, TIME_OUT, PORT, HARAKIRI
 from datetime import datetime
 
 

@@ -64,7 +64,7 @@ function setup_worker() {
     return
   fi
 
-  printf "AMO_ID:  %s...\n" "$AMI_ID"
+  printf "AMI_ID:  %s...\n" "$AMI_ID"
 
   RUN_INSTANCES=$(aws ec2 run-instances   \
     --image-id $UBUNTU_AMI        \
@@ -111,8 +111,6 @@ EOF
         --query ImageId --output text)
 
   aws ec2 wait image-available --image-ids "$IMAGE_ID"
-
-  aws ec2 terminate-instances --instance-ids "$INSTANCE_ID"
 
   echo "$IMAGE_ID"
 }
